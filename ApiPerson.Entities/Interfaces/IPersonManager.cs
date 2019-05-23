@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ApiPerson.Entities.Interfaces
 {
-    public interface IPersonRepository
+    public interface IPersonManager
     {
         void Save(Person person);
         Person Get(int Id);

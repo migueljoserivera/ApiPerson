@@ -31,5 +31,10 @@ namespace ApiPerson.DataAccess.Repositories
             _PersonContext.Persons.Add(person);
             _PersonContext.SaveChanges();
         }
+
+        public void Remove(Person person)
+        {
+            _PersonContext.Remove(person);
+        }
     }
 }
