@@ -8,15 +8,29 @@ using System.Text;
 
 namespace ApiPerson.BusinessLogic.Managers
 {
+    /// <summary>
+    /// Used for manage Person objects
+    /// </summary>
     public class PersonManager : IPersonManager
     {
         private readonly IPersonRepository _PersonRepository;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="PersonRepository">An implementation of IPersonRepository is necessary for persistence purposes.</param>
         public PersonManager(IPersonRepository PersonRepository)
         {
             _PersonRepository = PersonRepository;
         }
 
+        /// <summary>
+        /// Get Person by Id
+        /// </summary>
+        /// <param name="Id">Unique identifier from person</param>
+        /// <returns>Person found</returns>
+        /// <exception cref="NotFoundException">When person is not found</exception>
+        /// <exception cref="InvalidIdException">When id is invalid</exception>
         public Person Get(int Id)
         {
             CheckId(Id);
@@ -42,14 +56,23 @@ namespace ApiPerson.BusinessLogic.Managers
             return id < 1;
         }
 
+        /// <summary>
+        /// Retrieve all persons stored without filter
+        /// </summary>
+        /// <returns>All persons stored</returns>
         public IEnumerable<Person> GetAll()
         {
             return _PersonRepository.GetAll();
         }
 
-        public void Remove(int id)
+        /// <summary>
+        /// Delete person by Id
+        /// </summary>
+        /// <param name="Id">Unique identifier of person</param>
+        /// <exception cref="NotFoundException">When person is not found</exception>
+        public void Remove(int Id)
         {
-            Person person = Get(id);
+            Person person = Get(Id);
 
             if (person != null)
             {
@@ -59,14 +82,14 @@ namespace ApiPerson.BusinessLogic.Managers
             _PersonRepository.Remove(person);
         }
 
-        private void CheckIfPersonExists(Person person)
-        {
-            if (IsValidId(person.Id) && Get(person.Id) != null)
-            {
-                throw new NotFoundException();
-            }
-        }
-
+        /// <summary>
+        /// Insert new person or update person if this has their Id
+        /// </summary>
+        /// <param name="person">Person to save</param>
+        /// <exception cref="InvalidPropertyException">If name or lastname is null or empty</exception>
+        /// <exception cref="DuplicatedEmailException">If email is duplicated in the collection</exception>
+        /// <exception cref="InvalidMailAddressException">If email is not valid</exception>
+        /// <exception cref="InvalidAgeException">If age of person is not valid</exception>
         public void Save(Person person)
         {
             Validate(person);

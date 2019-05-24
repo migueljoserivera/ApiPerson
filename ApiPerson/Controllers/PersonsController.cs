@@ -9,17 +9,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPerson.Controllers
 {
+    /// <summary>
+    /// This controller allow the interaction with Person resource
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class PersonsController : ControllerBase
     {
         private readonly IPersonManager _PersonManager;
 
+        /// <summary>
+        /// Controller
+        /// </summary>
+        /// <param name="PersonManager">Implementation of IPersonManager</param>
         public PersonsController(IPersonManager PersonManager)
         {
             _PersonManager = PersonManager;
         }
 
+        /// <summary>
+        /// You can get all persons using Http Method Get
+        /// </summary>
+        /// <returns>Returns all persons from Manager</returns>
         [HttpGet]
         public ActionResult<IEnumerable<Person>> Get()
         {
@@ -33,6 +44,10 @@ namespace ApiPerson.Controllers
             }
         }
 
+        /// <summary>
+        /// You can get only one person by id using Http Method Get
+        /// </summary>
+        /// <returns>Returns only one person by Id from manager</returns>
         [HttpGet("{id}")]
         public ActionResult<Person> Get(int id)
         {
@@ -50,6 +65,10 @@ namespace ApiPerson.Controllers
             }
         }
 
+        /// <summary>
+        /// It creates a new person using Post Http Method
+        /// </summary>
+        /// <returns>Returns person created with his Id</returns>
         [HttpPost]
         public ActionResult<Person> Post([FromBody] Person person)
         {
@@ -64,6 +83,9 @@ namespace ApiPerson.Controllers
             }
         }
 
+        /// <summary>
+        /// It update the data of one person using Http Put Method
+        /// </summary>
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] Person person)
         {
@@ -79,6 +101,9 @@ namespace ApiPerson.Controllers
             }
         }
 
+        /// <summary>
+        /// It delete a person by Id using Delete Http Method 
+        /// </summary>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
