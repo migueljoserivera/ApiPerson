@@ -10,6 +10,6 @@ namespace ApiPerson.Entities.Interfaces
         void Save(Person person);
         Person Get(int Id);
         IEnumerable<Person> GetAll();
-        void Remove(Person person);
+        void Remove(int Id);
     }
 }

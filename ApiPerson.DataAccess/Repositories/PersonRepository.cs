@@ -26,15 +26,21 @@ namespace ApiPerson.DataAccess.Repositories
             return _PersonContext.Persons.AsEnumerable();
         }
 
-        public void Save(Person person)
+        public void Remove(Person person)
+        {
+            _PersonContext.Remove(person);
+        }
+
+        public void Insert(Person person)
         {
             _PersonContext.Persons.Add(person);
             _PersonContext.SaveChanges();
         }
 
-        public void Remove(Person person)
+        public void Update(Person person)
         {
-            _PersonContext.Remove(person);
+            _PersonContext.Persons.Update(person);
+            _PersonContext.SaveChanges();
         }
     }
 }

@@ -2,44 +2,99 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiPerson.BusinessLogic.Exceptions;
+using ApiPerson.Entities.Interfaces;
+using ApiPerson.Entities.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiPerson.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class PersonsController : ControllerBase
     {
-        // GET api/values
+        private readonly IPersonManager _PersonManager;
+
+        public PersonsController(IPersonManager PersonManager)
+        {
+            _PersonManager = PersonManager;
+        }
+
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Person>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok(_PersonManager.GetAll());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<Person> Get(int id)
         {
-            return "value";
+            try
+            {
+                return Ok(_PersonManager.Get(id));
+            }
+            catch(NotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public ActionResult<Person> Post([FromBody] Person person)
         {
+            try
+            {
+                _PersonManager.Save(person);
+                return Ok(person);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
-        // PUT api/values/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] Person person)
         {
+            try
+            {
+                person.Id = id;
+                _PersonManager.Save(person);
+                Ok();
+            }
+            catch (Exception e)
+            {
+                BadRequest(e.Message);
+            }
         }
 
-        // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            try
+            {
+                _PersonManager.Remove(id);
+                Ok();
+            }
+            catch (NotFoundException e)
+            {
+                NotFound(e.Message);
+            }
+            catch (Exception e)
+            {
+                BadRequest(e.Message);
+            }
         }
     }
 }

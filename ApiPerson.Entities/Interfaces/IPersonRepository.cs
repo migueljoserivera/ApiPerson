@@ -7,7 +7,8 @@ namespace ApiPerson.Entities.Interfaces
 {
     public interface IPersonRepository
     {
-        void Save(Person person);
+        void Insert(Person person);
+        void Update(Person person);
         Person Get(int Id);
         IEnumerable<Person> GetAll();
         void Remove(Person person);
