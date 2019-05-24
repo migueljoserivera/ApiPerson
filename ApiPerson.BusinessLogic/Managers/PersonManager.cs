@@ -45,7 +45,7 @@ namespace ApiPerson.BusinessLogic.Managers
 
         private void CheckId(int id)
         {
-            if (IsValidId(id))
+            if (!IsValidId(id))
             {
                 throw new InvalidIdException("Invalid Id");
             }
@@ -53,7 +53,7 @@ namespace ApiPerson.BusinessLogic.Managers
 
         private bool IsValidId(int id)
         {
-            return id < 1;
+            return id > 0;
         }
 
         /// <summary>
@@ -73,11 +73,6 @@ namespace ApiPerson.BusinessLogic.Managers
         public void Remove(int Id)
         {
             Person person = Get(Id);
-
-            if (person != null)
-            {
-                throw new NotFoundException();
-            }
 
             _PersonRepository.Remove(person);
         }
@@ -107,7 +102,7 @@ namespace ApiPerson.BusinessLogic.Managers
         private void Validate(Person person)
         {
             ValidateName(person.Name);
-            ValidateLastname(person.Name);
+            ValidateLastname(person.Lastname);
             ValidateAge(person.Age);
             ValidateEmails(person.Emails);
         }
@@ -131,8 +126,15 @@ namespace ApiPerson.BusinessLogic.Managers
 
         private void ValidateEmailAddress(string address)
         {
-            var mailAddress = new System.Net.Mail.MailAddress(address);
-            if (mailAddress.Address != address)
+            try
+            {
+                var mailAddress = new System.Net.Mail.MailAddress(address);
+                if (mailAddress.Address != address)
+                {
+                    throw new InvalidMailAddressException($"{address} is not valid");
+                }
+            }
+            catch
             {
                 throw new InvalidMailAddressException($"{address} is not valid");
             }
