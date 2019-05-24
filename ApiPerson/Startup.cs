@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiPerson.BusinessLogic.Managers;
+using ApiPerson.DataAccess;
+using ApiPerson.DataAccess.Repositories;
+using ApiPerson.Entities.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -21,14 +25,17 @@ namespace ApiPerson
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-        }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            services.AddScoped<IPersonManager, PersonManager>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
+
+            services.AddEntityFrameworkSqlite().AddDbContext<PersonContext>();
+        }
+        
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -38,6 +45,11 @@ namespace ApiPerson
             else
             {
                 app.UseHsts();
+            }
+
+            using (var client = new PersonContext())
+            {
+                client.Database.EnsureCreated();
             }
 
             app.UseHttpsRedirection();

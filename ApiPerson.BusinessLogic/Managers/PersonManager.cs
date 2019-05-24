@@ -117,7 +117,7 @@ namespace ApiPerson.BusinessLogic.Managers
 
         private void ValidateAge(int age)
         {
-            if (age > -1)
+            if (age < 0)
             {
                 throw new InvalidAgeException($"The age is incorrect");
             }
